@@ -12,13 +12,15 @@
     <!--<script type="text/javascript" src="js/vendor/jquery-1.10.2.min.js"></script>-->
 </head>
 <body>
-<!--<input type="button" value="点击按钮" id="btn">-->
+<input type="button" value="点击按钮" id="btn">
 
-<form action="1.get.php" method="post">
+<form action="getNews.php" method="post">
 <!--<form action="1.get.php" method="get">-->
     <input type="text" name="username">
     <input type="text" name="age">
     <input type="submit" value="提交">
+
+    <ul id="ul1"></ul>
 </form>
 </body>
 <script>
@@ -48,18 +50,32 @@
         1.打开方式，2，地址。
         3.是否异步 异步：非阻塞，前面的代码不会影响后面代码的执行；同步：阻塞
         后续的的代码和前面的挂钩的时候，用同步。大部分用异步*/
-        xhr.open('post','1.post.php',true);
+        // xhr.open('post','1.post.php',true);
+        xhr.open('post','getNews.php',true);
 //        提交
         xhr.send();
 //等待服务器返回内容
 // responseText：ajax请求返回的文本形式内容被存放在这个属性下面
 // readyState：ajax工作状态 0 初始化，1.载入。已经调用send方法正在发送请求，2，载入完成。3解析，4，完成。
 //  status 服务器（请求资源）的状态
-
+//  1、消息，2.成功。3.重定向，4，请求错误，5.服务器错误。
         xhr.onreadystatechange=function () {
 
             if (xhr.readyState==4){
-                alert(xhr.responseText);
+                if (xhr.status==200){
+                    var data=JSON.parse(xhr.responseText);
+                    var oUL=document.getElementById('ul1');
+                    var html='';
+                    for (var i=0;i<data.length;i++){
+                        html+='<li><a href="">'+data[i].title+'</a>[<span></span>]'+data[i].date+'</li>';
+                    }
+                        oUL.innerHTML=html;
+                    // alert(xhr.responseText);
+                    // typeof xhr.responseText string;
+                }else{
+                    alert('出错了。'+xhr.status);
+                }
+
             }
         }
     }
